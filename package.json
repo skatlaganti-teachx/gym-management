@@ -1,0 +1,19 @@
+{
+  "name": "gym-management-app",
+  "module": "index.ts",
+  "type": "module",
+  "author": "M Shuja Ali <me@shujaalik.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "bun-types": "latest",
+    "concurrently": "^9.1.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "start": "concurrently \"bun client\" \"bun server\"",
+    "client": "cd client && bun run dev",
+    "server": "FLASK_APP=server flask run"
+  }
+}
