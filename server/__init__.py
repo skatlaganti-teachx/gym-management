@@ -1,5 +1,5 @@
 from flask import Flask
-from server.controllers import add_member, view_members, update_fee_status, record_attendance, view_attendance
+from server.controllers import add_member, view_members, update_fee_status, record_attendance, view_attendance, delete_all
 
 app = Flask(__name__)
 
@@ -22,3 +22,7 @@ def record_attendance_route():
 @app.route("/attendance", methods=["GET"])
 def view_attendance_route():
     return view_attendance()
+
+@app.route("/delete_all", methods=["DELETE"])
+def delete_all_route():
+    return delete_all()

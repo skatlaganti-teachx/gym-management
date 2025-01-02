@@ -32,9 +32,6 @@ def view_members():
     try:
         members = Member.all()
 
-        if not members:
-            return jsonify({"error": "No members found."}), 404
-
         return jsonify([{
             "id": idx + 1,
             "name": member.name,
@@ -101,15 +98,22 @@ def view_attendance():
     try:
         records = Attendance.all()
 
-        if not records:
-            return jsonify({"error": "No attendance records found."}), 404
-
         return jsonify([{
             "id": record[0],
             "member_name": record[1],
             "check_in_time": record[2],
             "check_out_time": record[3]
         } for record in records]), 200
+
+    except Exception as e:
+        return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
+
+def delete_all():
+    try:
+        Member.delete_all()
+        Attendance.delete_all()
+
+        return jsonify({"message": "All data deleted successfully"}), 200
 
     except Exception as e:
         return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500

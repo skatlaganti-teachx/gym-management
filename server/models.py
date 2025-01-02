@@ -52,6 +52,12 @@ class Member:
         db = Database()
         query = "UPDATE members SET fee_status = ? WHERE name = ?"
         db.execute_query(query, (fee_status, self.name))
+    
+    @classmethod
+    def delete_all(self):
+        db = Database()
+        query = "DELETE FROM members"
+        db.execute_query(query)
 
 class Attendance:
     def __init__(self, member_id, check_in_time=None, check_out_time=None):
@@ -77,3 +83,9 @@ class Attendance:
                    JOIN members m ON a.member_id = m.id"""
         records = db.fetch_all(query)
         return records
+    
+    @classmethod
+    def delete_all(self):
+        db = Database()
+        query = "DELETE FROM attendance"
+        db.execute_query(query)
