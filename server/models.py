@@ -1,6 +1,24 @@
+from fastapi import HTTPException
 import sqlite3
 from datetime import datetime
+from pydantic import BaseModel
 
+class BadRequest(HTTPException):
+    def __init__(self, message: str):
+        super().__init__(status_code=400, detail=message)
+
+class MemberRequest(BaseModel):
+    name: str
+    membership_type: str
+    program: str
+
+class FeeStatusRequest(BaseModel):
+    member_id: int
+    fee_status: str
+
+class AttendanceRequest(BaseModel):
+    member_id: int
+    action: str
 class Database:
     def __init__(self, db_name="db.db"):
         self.db_name = db_name
