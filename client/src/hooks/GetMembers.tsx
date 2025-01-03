@@ -1,5 +1,5 @@
 import { getAllMembers } from "@/lib/api-handlers";
-import { Member } from "@/types";
+import { Member } from "@/types/api";
 import { useEffect, useState } from "react";
 
 const GetMembers = () => {

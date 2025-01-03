@@ -4,7 +4,7 @@ import {
   FeeStatusRequest,
   Member,
   MemberRequest,
-} from "@/types";
+} from "@/types/api";
 
 const getAllMembers = async (): Promise<Member[]> => {
   return new Promise((resolve, reject) => {
@@ -84,7 +84,7 @@ const recordAttendance = async (attendance: AttendanceRequest) => {
   });
 };
 
-const getAttendance = async (): Promise<Attendance> => {
+const getAttendance = async (): Promise<Attendance[]> => {
   return new Promise((resolve, reject) => {
     try {
       fetch("http://localhost:8000/attendance")

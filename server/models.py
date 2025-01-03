@@ -2,7 +2,7 @@ from fastapi import HTTPException
 import sqlite3
 from datetime import datetime
 from pydantic import BaseModel
-from typing import Literal
+from typing import Literal, Optional
 
 class BadRequest(HTTPException):
     def __init__(self, message: str):
@@ -35,7 +35,7 @@ class AttendanceResponse(BaseModel):
     member_id: int
     name: str
     check_in_time: datetime
-    check_out_time: datetime
+    check_out_time: Optional[datetime]
 class Database:
     def __init__(self, db_name="db.db"):
         self.db_name = db_name
