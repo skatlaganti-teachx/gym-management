@@ -11,15 +11,15 @@ const Stat = ({
     Icon: IconType
 }) => {
     return <Card className="w-full">
-        <CardHeader>
+        <CardHeader className="pt-3">
             <div className="flex justify-between items-center">
                 <CardTitle className="font-teko">
                     {title}
                 </CardTitle>
-                <Icon />
+                <Icon size="30px" />
             </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pb-3">
             <h1 className="uppercase font-teko scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">
                 {value}
             </h1>

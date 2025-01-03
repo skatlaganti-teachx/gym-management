@@ -11,7 +11,7 @@ const Header = () => {
     }
 
     return (
-        <div className="mb-10 flex w-full justify-between items-center">
+        <div className="flex w-full justify-between items-center">
             <div>
                 <Clock />
                 <h1 className="uppercase font-teko scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">

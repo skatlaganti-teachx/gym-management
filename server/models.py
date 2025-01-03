@@ -2,6 +2,7 @@ from fastapi import HTTPException
 import sqlite3
 from datetime import datetime
 from pydantic import BaseModel
+from typing import Literal
 
 class BadRequest(HTTPException):
     def __init__(self, message: str):
@@ -14,11 +15,27 @@ class MemberRequest(BaseModel):
 
 class FeeStatusRequest(BaseModel):
     member_id: int
-    fee_status: str
+    fee_status: Literal["pending", "paid"]
 
 class AttendanceRequest(BaseModel):
     member_id: int
-    action: str
+    action: Literal["in", "out"]
+
+
+class BaseResponse(BaseModel):
+    message: str
+class MemberResponse(BaseModel):
+    id: int
+    name: str
+    membership_type: str
+    program: str
+    fee_status: Literal["pending", "paid"]
+
+class AttendanceResponse(BaseModel):
+    member_id: int
+    name: str
+    check_in_time: datetime
+    check_out_time: datetime
 class Database:
     def __init__(self, db_name="db.db"):
         self.db_name = db_name
@@ -29,7 +46,7 @@ class Database:
             name TEXT NOT NULL,
             membership_type TEXT NOT NULL,
             program TEXT NOT NULL,
-            fee_status TEXT DEFAULT 'Pending'
+            fee_status TEXT DEFAULT 'pending'
         )""")
         self.execute_query("""CREATE TABLE IF NOT EXISTS attendance (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,7 +65,7 @@ class Database:
         return self.cursor.fetchall()
 
 class Member:
-    def __init__(self, name, membership_type, program, fee_status="Pending"):
+    def __init__(self, name, membership_type, program, fee_status="pending"):
         self.name = name
         self.membership_type = membership_type
         self.program = program
