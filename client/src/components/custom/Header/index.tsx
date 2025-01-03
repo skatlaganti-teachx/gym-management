@@ -2,6 +2,7 @@ import { useTheme } from "@/components/ui/theme-provider";
 import { Button } from "../../ui/button"
 import Clock from "./Clock";
 import { IoSunnyOutline, IoMoonOutline } from "react-icons/io5";
+import ResetAll from "./ResetAll";
 
 const Header = () => {
     const { setTheme, theme } = useTheme();
@@ -20,7 +21,7 @@ const Header = () => {
                 <p className="text-sm text-muted-foreground font-medium">Manage your gym efforlessly</p>
             </div>
             <div className="flex justify-center items-center gap-4">
-                <Button size={"sm"} variant={"destructive"}>Reset All</Button>
+                <ResetAll />
                 <Button size={"icon"} variant={"outline"} onClick={toggleColorMode}>
                     {theme === "dark" ? <IoSunnyOutline />
                         : <IoMoonOutline />}
