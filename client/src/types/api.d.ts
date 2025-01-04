@@ -8,7 +8,6 @@ interface Member {
 
 interface Attendance {
   member_id: number;
-  name: string;
   check_in_time: string;
   check_out_time: string | null;
 }

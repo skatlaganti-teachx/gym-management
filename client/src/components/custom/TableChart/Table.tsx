@@ -17,6 +17,15 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ConfirmDialog from "../ConfirmDialog";
+import { useToast } from "@/hooks/use-toast";
+import Loading from "../Loader";
+import { Attendance, AttendanceRequest, FeeStatusRequest } from "@/types/api";
+import { recordAttendance, updateFeeStatus } from "@/lib/api-handlers";
+import { useSetAtom } from "jotai";
+import { refreshAttendanceAtom, refreshMembersAtom } from "@/components/jotai/atoms";
+import dayjs from "dayjs";
+import ViewAttendance from "./ViewAttendance";
 
 const avatarImages = [
     "https://avatar.iran.liara.run/public/39",
@@ -38,16 +47,74 @@ const avatarImages = [
 ]
 
 const Table = ({
-    members
+    members,
+    attendance
 }: {
-    members: membersListType[]
+    members: membersListType[],
+    attendance: Attendance[]
 }) => {
+    const { toast } = useToast();
+    const [loading, setLoading] = useState(false);
+    const refreshAttendanceSetter = useSetAtom(refreshAttendanceAtom);
+    const refreshMembersSetter = useSetAtom(refreshMembersAtom);
     const [search, setSearch] = useState<string>("");
     const filteredMembers = members.filter((member) => member.name.toLowerCase().includes(search.toLowerCase()));
     const randomAvatar = () => avatarImages[Math.floor(Math.random() * avatarImages.length)];
 
+    const changeFeeStatus = async (member: membersListType) => {
+        setLoading(true);
+        try {
+            const payload: FeeStatusRequest = {
+                member_id: member.id,
+                fee_status: member.fee_status === "paid" ? "pending" : "paid"
+            }
+            await updateFeeStatus(payload);
+            refreshMembersSetter((prev) => !prev);
+            toast({
+                title: 'Success',
+                description: `Fee status of ${member.name} has been changed to ${member.fee_status === "paid" ? "pending" : "paid"}`,
+                variant: 'default'
+            });
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: String(error),
+                variant: 'destructive'
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const changeCheckInStatus = async (member: membersListType) => {
+        setLoading(true);
+        try {
+            const payload: AttendanceRequest = {
+                member_id: member.id,
+                action: member.attending ? "out" : "in"
+            }
+            await recordAttendance(payload);
+            refreshAttendanceSetter((prev) => !prev);
+            refreshMembersSetter((prev) => !prev);
+            toast({
+                title: 'Success',
+                description: `${member.attending ? "Checked out" : "Checked in"} ${member.name}`,
+                variant: 'default'
+            });
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: String(error),
+                variant: 'destructive'
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <Card className="w-full">
+            {loading && <Loading />}
             <CardHeader className="p-3">
                 <div className="w-full flex justify-between items-center">
                     <Input className="max-w-[200px]" type="search" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} />
@@ -82,11 +149,13 @@ const Table = ({
                                         {member.attending ? <><div className="bg-[#10c97a] w-[10px] h-[10px] rounded-full animate-pulse"></div> Yes</> : "No"}
                                     </div>
                                 </TableCell>
-                                <TableCell>{member.lastAttended}</TableCell>
+                                <TableCell>{member.lastAttended ? dayjs(member.lastAttended).format(
+                                    "DD MMM YYYY, hh:mm A"
+                                ) : ""}</TableCell>
                                 <TableCell className="uppercase">{member.membership_type}</TableCell>
                                 <TableCell>{member.program}</TableCell>
                                 <TableCell className="text-right">{member.fee_status === "paid" ? <Badge>Paid</Badge> : <Badge variant={"destructive"}>Pending</Badge>}</TableCell>
-                                <TableCell className="text-right w-10">
+                                <TableCell className="text-right w-30">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -96,12 +165,24 @@ const Table = ({
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
                                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                            <DropdownMenuItem>
-                                                View Attendance
-                                            </DropdownMenuItem>
+                                            <ViewAttendance member={member} attendance={attendance}>
+                                                <DropdownMenuItem onSelect={e => e.preventDefault()}>
+                                                    View Attendance
+                                                </DropdownMenuItem>
+                                            </ViewAttendance>
                                             <DropdownMenuSeparator />
-                                            <DropdownMenuItem>Check {member.attending ? "Out" : "In"}</DropdownMenuItem>
-                                            <DropdownMenuItem>Change Fee Status</DropdownMenuItem>
+                                            <ConfirmDialog description={
+                                                `Are you sure you want to ${member.attending ? "check out" : "check in"} ${member.name}?`
+                                            } actionText={member.attending ? "Check Out" : "Check In"} onConfirm={() => changeCheckInStatus(member)}>
+                                                <DropdownMenuItem onSelect={e => e.preventDefault()}>Check {member.attending ? "Out" : "In"}</DropdownMenuItem>
+                                            </ConfirmDialog>
+                                            <ConfirmDialog description={
+                                                `Are you sure you want to change the fee status of ${member.name}?`
+                                            } actionText={
+                                                member.fee_status === "paid" ? "Mark as Pending" : "Mark as Paid"
+                                            } onConfirm={() => changeFeeStatus(member)}>
+                                                <DropdownMenuItem onSelect={e => e.preventDefault()}>Change Fee Status</DropdownMenuItem>
+                                            </ConfirmDialog>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>

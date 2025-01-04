@@ -33,7 +33,6 @@ class MemberResponse(BaseModel):
 
 class AttendanceResponse(BaseModel):
     member_id: int
-    name: str
     check_in_time: datetime
     check_out_time: Optional[datetime]
 class Database:
@@ -52,7 +51,7 @@ class Database:
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             member_id INTEGER NOT NULL,
             check_in_time TEXT,
-            check_out_time TEXT,
+            check_out_time TEXT NULL,
             FOREIGN KEY (member_id) REFERENCES members (id)
         )""")
 
@@ -113,10 +112,10 @@ class Attendance:
     @classmethod
     def all(cls):
         db = Database()
-        query = """SELECT a.id, m.name, a.check_in_time, a.check_out_time
-                   FROM attendance a
-                   JOIN members m ON a.member_id = m.id"""
+        query = """SELECT a.member_id, a.check_in_time, a.check_out_time
+                   FROM attendance a"""
         records = db.fetch_all(query)
+        print(records)
         return records
     
     @classmethod

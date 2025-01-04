@@ -20,10 +20,10 @@ function App() {
 
   useEffect(() => {
     const membersList = members.map((member) => {
-      const attendanceData = attendance.find((att) => att.member_id === member.id);
+      const attendanceData = attendance.reverse().find((att) => att.member_id === member.id);
       return {
         ...member,
-        attending: attendanceData ? true : false,
+        attending: attendanceData ? attendanceData.check_out_time === null : false,
         lastAttended: attendanceData ? attendanceData.check_in_time : "",
       };
     });
@@ -37,11 +37,11 @@ function App() {
   }, [members, attendance]);
 
   return (
-    <div className="flex justify-center items-start flex-col p-8 gap-5">
+    <div className="flex justify-center items-start flex-col px-8 gap-5">
       <Toaster />
       <Header />
       <Stats stats={stats} />
-      <TableChart members={membersList} />
+      <TableChart attendance={attendance} members={membersList} />
     </div>
   )
 }

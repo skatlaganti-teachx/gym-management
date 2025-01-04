@@ -68,7 +68,7 @@ async def view_attendance():
     try:
         records = Attendance.all()
 
-        return [{"id": record[0], "member_name": record[1], "check_in_time": record[2], "check_out_time": record[3]}
+        return [{"member_id": record[0] + 1, "check_in_time": record[1], "check_out_time": record[2]}
                 for record in records]
 
     except Exception as e:
