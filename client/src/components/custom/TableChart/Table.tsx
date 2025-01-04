@@ -113,7 +113,7 @@ const Table = ({
     };
 
     return (
-        <Card className="w-full">
+        <Card className="w-full min-h-full">
             {loading && <Loading />}
             <CardHeader className="p-3">
                 <div className="w-full flex justify-between items-center">

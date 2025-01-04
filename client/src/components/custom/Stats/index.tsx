@@ -9,11 +9,15 @@ const Stats = ({
 }: {
     stats: StatsType
 }) => {
-    return <div className="flex justify-center items-center w-full gap-7">
-        <Stat title={"Total Members"} Icon={PiUsersFour} value={stats.totalMembers} />
-        <Stat title={"Attending Members"} Icon={LuUserRoundCheck} value={stats.attendingMembers} />
-        <Stat title={"Paid Members"} Icon={MdOutlinePaid} value={stats.paidMembers} />
-        <Stat title={"Unpaid Members"} Icon={MdMoneyOffCsred} value={stats.unPaidMembers} />
+    return <div className="flex justify-center items-center w-full gap-7 flex-col lg:flex-row">
+        <div className="flex justify-center items-center w-full gap-7 flex-col sm:flex-row">
+            <Stat title={"Total Members"} Icon={PiUsersFour} value={stats.totalMembers} />
+            <Stat title={"Attending Members"} Icon={LuUserRoundCheck} value={stats.attendingMembers} />
+        </div>
+        <div className="flex justify-center items-center w-full gap-7 flex-col sm:flex-row">
+            <Stat title={"Paid Members"} Icon={MdOutlinePaid} value={stats.paidMembers} />
+            <Stat title={"Unpaid Members"} Icon={MdMoneyOffCsred} value={stats.unPaidMembers} />
+        </div>
     </div>
 }
 
