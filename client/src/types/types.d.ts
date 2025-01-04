@@ -1,3 +1,5 @@
+import { Member } from "./api";
+
 interface StatsType {
   totalMembers: number;
   paidMembers: number;
@@ -5,4 +7,9 @@ interface StatsType {
   attendingMembers: number;
 }
 
-export type { StatsType };
+interface membersListType extends Member {
+  attending: boolean;
+  lastAttended: string;
+}
+
+export type { StatsType, membersListType };

@@ -31,8 +31,9 @@ async def update_fee_status(request: FeeStatusRequest):
 
         if request.member_id > len(members) or request.member_id <= 0:
             raise HTTPException(status_code=404, detail="Member not found.")
+        request.member_id -= 1
 
-        member = members[request.member_id - 1]
+        member = members[request.member_id]
         member.update_fee_status(request.fee_status)
 
         return {"message": f"Fee status updated for member ID {request.member_id}"}
@@ -49,6 +50,7 @@ async def record_attendance(request: AttendanceRequest):
 
         if request.member_id > len(members) or request.member_id <= 0:
             raise HTTPException(status_code=404, detail="Member not found.")
+        request.member_id -= 1
 
         attendance = Attendance(request.member_id)
 

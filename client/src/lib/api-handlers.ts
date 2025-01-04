@@ -1,6 +1,7 @@
 import {
   Attendance,
   AttendanceRequest,
+  BaseResponse,
   FeeStatusRequest,
   Member,
   MemberRequest,
@@ -21,7 +22,7 @@ const getAllMembers = async (): Promise<Member[]> => {
   });
 };
 
-const addMember = async (member: MemberRequest) => {
+const addMember = async (member: MemberRequest): Promise<BaseResponse> => {
   return new Promise((resolve, reject) => {
     try {
       fetch("http://localhost:8000/add_member", {
@@ -33,7 +34,7 @@ const addMember = async (member: MemberRequest) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          resolve(data);
+          resolve(data as BaseResponse);
         });
     } catch (err) {
       console.error(err);
@@ -42,7 +43,9 @@ const addMember = async (member: MemberRequest) => {
   });
 };
 
-const updateFeeStatus = async (feeStatus: FeeStatusRequest) => {
+const updateFeeStatus = async (
+  feeStatus: FeeStatusRequest,
+): Promise<BaseResponse> => {
   return new Promise((resolve, reject) => {
     try {
       fetch("http://localhost:8000/update_fee_status", {
@@ -54,7 +57,7 @@ const updateFeeStatus = async (feeStatus: FeeStatusRequest) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          resolve(data);
+          resolve(data as BaseResponse);
         });
     } catch (err) {
       console.error(err);
@@ -63,7 +66,9 @@ const updateFeeStatus = async (feeStatus: FeeStatusRequest) => {
   });
 };
 
-const recordAttendance = async (attendance: AttendanceRequest) => {
+const recordAttendance = async (
+  attendance: AttendanceRequest,
+): Promise<BaseResponse> => {
   return new Promise((resolve, reject) => {
     try {
       fetch("http://localhost:8000/record_attendance", {
@@ -75,7 +80,7 @@ const recordAttendance = async (attendance: AttendanceRequest) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          resolve(data);
+          resolve(data as BaseResponse);
         });
     } catch (err) {
       console.error(err);
@@ -99,7 +104,7 @@ const getAttendance = async (): Promise<Attendance[]> => {
   });
 };
 
-const deleteAll = async () => {
+const deleteAll = async (): Promise<BaseResponse> => {
   return new Promise((resolve, reject) => {
     try {
       fetch("http://localhost:8000/delete_all", {
@@ -107,7 +112,7 @@ const deleteAll = async () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          resolve(data);
+          resolve(data as BaseResponse);
         });
     } catch (err) {
       console.error(err);

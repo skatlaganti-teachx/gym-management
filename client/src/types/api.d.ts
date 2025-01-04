@@ -1,7 +1,7 @@
 interface Member {
   id: number;
   name: string;
-  memebership_type: string;
+  membership_type: string;
   program: string;
   fee_status: "pending" | "paid";
 }
@@ -29,10 +29,15 @@ interface FeeStatusRequest {
   fee_status: "pending" | "paid";
 }
 
+interface BaseResponse {
+  message: string;
+}
+
 export type {
   Member,
   Attendance,
   AttendanceRequest,
   MemberRequest,
   FeeStatusRequest,
+  BaseResponse,
 };

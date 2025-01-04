@@ -4,12 +4,13 @@ import TableChart from "./components/custom/TableChart"
 import GetMembers from "./hooks/GetMembers";
 import GetAttendance from "./hooks/GetAttendance";
 import { useEffect, useState } from "react";
-import { StatsType } from "./types/types";
+import { membersListType, StatsType } from "./types/types";
+import { Toaster } from "@/components/ui/toaster";
 
 function App() {
   const members = GetMembers();
   const attendance = GetAttendance();
-
+  const [membersList, setMembersList] = useState<membersListType[]>([]);
   const [stats, setStats] = useState<StatsType>({
     totalMembers: 0,
     paidMembers: 0,
@@ -18,19 +19,29 @@ function App() {
   });
 
   useEffect(() => {
+    const membersList = members.map((member) => {
+      const attendanceData = attendance.find((att) => att.member_id === member.id);
+      return {
+        ...member,
+        attending: attendanceData ? true : false,
+        lastAttended: attendanceData ? attendanceData.check_in_time : "",
+      };
+    });
+    setMembersList(membersList);
     setStats({
-      totalMembers: members.length,
-      paidMembers: members.filter((member) => member.fee_status === "paid").length,
-      unPaidMembers: members.filter((member) => member.fee_status === "pending").length,
-      attendingMembers: attendance.filter((att) => att.check_in_time && att.check_out_time === null).length
+      totalMembers: membersList.length,
+      paidMembers: membersList.filter((member) => member.fee_status === "paid").length,
+      unPaidMembers: membersList.filter((member) => member.fee_status === "pending").length,
+      attendingMembers: membersList.filter((member) => member.attending).length
     });
   }, [members, attendance]);
 
   return (
     <div className="flex justify-center items-start flex-col p-8 gap-5">
+      <Toaster />
       <Header />
       <Stats stats={stats} />
-      <TableChart />
+      <TableChart members={membersList} />
     </div>
   )
 }
