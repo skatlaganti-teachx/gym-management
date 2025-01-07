@@ -115,7 +115,6 @@ class Attendance:
         query = """SELECT a.member_id, a.check_in_time, a.check_out_time
                    FROM attendance a"""
         records = db.fetch_all(query)
-        print(records)
         return records
     
     @classmethod
