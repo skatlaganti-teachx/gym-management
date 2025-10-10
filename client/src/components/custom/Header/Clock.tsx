@@ -15,7 +15,7 @@ const Clock = () => {
     }, []);
 
     return (
-        <h4 className="scroll-m-20 text-xl font-medium tracking-tight font-teko">
+        <h4 className="scroll-m-20 text-xl font-medium text-muted tracking-tight font-teko">
             {time}
         </h4>
     )
